@@ -56,6 +56,16 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public UserDto getUserDetailsByEmail(String email) {
+        UserEntity entity = repository.findByEmail(email);
+        if(entity==null){
+            throw new UsernameNotFoundException(email);
+        }
+        UserDto userDto = new ModelMapper().map(entity, UserDto.class);
+        return userDto;
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = repository.findByEmail(username);
         if (userEntity==null){

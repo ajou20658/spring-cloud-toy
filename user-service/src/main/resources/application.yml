@@ -27,3 +27,7 @@ eureka:
       defaultZone: http://127.0.0.1:8761/eureka
 greeting:
   message: Welcome to the Simple Ecommerce
+
+token:
+  expiration_time: 86400000 # 1000ms(1s) * 60s(1m) * 60m(1h) * 24h(1d) == 864000
+  secret: user_tokenuser_tokenuser_tokenuser_tokenuser_tokenuser_tokenuser_tokenuser_tokenuser_tokenuser_token
