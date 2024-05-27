@@ -55,14 +55,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
         String username = ((User)authResult.getPrincipal()).getUsername();
-//        UserDto userDetails = userService.getUserByUserId(username);
         UserDto userDetails = userService.getUserDetailsByEmail(username);
-//        log.info(((User)authResult.getPrincipal()).getUsername());
-//        String token = Jwts.builder()
-//                .setSubject(userDetails.getUserId())
-//                .setExpiration(new Date(System.currentTimeMillis()+Long.parseLong(env.getProperty("token.expiration_time"))))
-//                .signWith(SignatureAlgorithm.HS512,env.getProperty("token.secret"))
-//                .compact();
         byte[] secretKeyBytes = Base64.getEncoder().encode(env.getProperty("token.secret").getBytes());
 
         SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
@@ -71,6 +64,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                 .expiration(new Date(System.currentTimeMillis()+Long.parseLong(env.getProperty("token.expiration_time"))))
                                         .signWith(secretKey)
                                                 .compact();
+        String subject = Jwts.parser().verifyWith(secretKey).build()
+                        .parseSignedClaims(token).getPayload().getSubject();
+//        if(subject.equals(userDetails.getUserId())){
+//            System.out.println("equals");
+//        }
         response.addHeader("token",token);
         response.addHeader("userId",userDetails.getUserId());
     }
